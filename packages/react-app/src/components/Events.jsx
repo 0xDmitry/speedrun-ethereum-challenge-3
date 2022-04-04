@@ -28,13 +28,15 @@ export default function Events({ contracts, contractName, eventName, localProvid
       <h2>
         {eventName} Events
         <br />
-        {eventName === "EthToTokenSwap"
-          ? " ⟠ -->🎈 Address | Trade | AmountIn | AmountOut"
+        {eventName === "Approved"
+          ? "✅ Address | Approved Amount"
+          : eventName === "EthToTokenSwap"
+          ? " ⟠ -->🎈 Address | Trade | Amount In | Amount Out"
           : eventName === "TokenToEthSwap"
-          ? "🎈-->⟠ Address | Trade | AmountOut | AmountIn"
+          ? "🎈-->⟠ Address | Trade | Amount Out | Amount In"
           : eventName === "LiquidityProvided"
-          ? "➕ Address | Liquidity Minted | Eth In | Balloons In"
-          : "➖ Address | Liquidity Withdrawn | ETH out | Balloons Out "}
+          ? "➕ Address | Liquidity Minted | ETH In | Balloons In"
+          : "➖ Address | Liquidity Withdrawn | ETH Out | Balloons Out "}
       </h2>
       <List
         bordered
@@ -43,13 +45,18 @@ export default function Events({ contracts, contractName, eventName, localProvid
           return (
             <List.Item key={item.blockNumber + "_" + item.args[0].toString()}>
               <Address address={item.args[0]} ensProvider={mainnetProvider} fontSize={16} />
-              {item.args[1].toString().indexOf("E") == -1 ? (
-                <TokenBalance balance={item.args[1]} provider={localProvider} />
-              ) : (
-                `${item.args[1].toString()}`
+              {eventName !== "Approved" &&
+                (item.args[1].toString().indexOf("E") == -1 ? (
+                  <TokenBalance balance={item.args[1]} provider={localProvider} />
+                ) : (
+                  `${item.args[1].toString()}`
+                ))}
+              {eventName !== "Approved" && <TokenBalance balance={item.args[2]} provider={localProvider} />}
+              {eventName !== "Approved" && <TokenBalance balance={item.args[3]} provider={localProvider} />}
+              {eventName === "Approved" && (
+                <Address address={item.args[1]} ensProvider={mainnetProvider} fontSize={16} />
               )}
-              <TokenBalance balance={item.args[2]} provider={localProvider} />
-              <TokenBalance balance={item.args[3]} provider={localProvider} />
+              {eventName === "Approved" && <TokenBalance balance={item.args[2]} provider={localProvider} />}
             </List.Item>
           );
         }}

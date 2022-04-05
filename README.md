@@ -1,3 +1,5 @@
+You can try it here: https://upset-trade.surge.sh/
+
 # 🏗 scaffold-eth | 🏰 BuidlGuidl
 
 ## 🚩 **Challenge 3: Minimum Viable Exchange**
